@@ -1,0 +1,29 @@
+/*
+(c) Harshal Gajjar (gotoharshal@gmail.com)
+This code is available under GNU General Public Licence v3
+*/
+
+.text-area-custom{
+    width:100%;
+    max-width:100% !important;
+    height:150px;
+    border:1px solid #b4b4b4;
+    border-radius: 2px;
+}
+
+input[type="text"]{
+  width:100%;
+  border:1px solid #b4b4b4;
+}
+
+input[type="submit"]{
+  width:100%;
+  border:1px solid #b4b4b4;
+  background-color: #ccc;
+  text-align: right;
+  transition: all 0.1s ease-in-out;
+}
+
+input[type="submit"]:hover{
+  background-color: rgba(200,200,200,1);
+}

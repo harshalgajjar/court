@@ -1,0 +1,147 @@
+/*
+(c) Harshal Gajjar (gotoharshal@gmail.com)
+This code is available under GNU General Public Licence v3
+*/
+
+textarea[name="issue"]{
+    width:100%;
+    max-width:100% !important;
+    height:200px;
+    border:1px solid #b4b4b4;
+}
+
+body{
+  padding:0px;
+  padding-top:60px;
+}
+
+.required{
+  color:rgba(255,0,0,0.5);
+}
+
+#greeting{
+  font-style: italic;
+}
+
+.gchart{
+   max-width: 100%; height: auto;
+}
+
+#team{
+  border-radius: 10px;
+}
+
+.complainsSum{
+  font-size:1.5em;
+  width: 100%;
+  text-align: right;
+  margin-bottom:10px;
+  color:#888;
+}
+
+#new-complain input[type="text"],#new-complain input[type="submit"]{
+    width:100%;
+    max-width: 100%;
+    text-align: left;
+    border:1px solid #b4b4b4;
+}
+
+#team_container_fluid{
+  background-color:#eee;
+}
+
+.input-label{
+  font-size: 0.9em;
+  display: block;
+}
+
+.team_member{
+  border: 2px dotted gray;
+  display: inline-block;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 2px;
+}
+
+.team_member_info{
+  max-width:75px !important;
+  background-color: red;
+}
+
+#new-complain input[type="submit"]{
+    background:#fff;
+    font-family: logo;
+}
+
+#log-header{
+    border-bottom: 2px solid #000;
+}
+
+.box{
+    max-width:784px;
+    padding:20px;
+    border:2px dotted #b4b4b4;
+}
+
+.box-large{
+    padding:20px;
+    border:2px dotted #b4b4b4;
+
+}
+
+.bottom-gap, .box-large{
+    margin-bottom:30px;
+}
+
+#old-complains-table td{
+    padding:5px;
+    padding-right:10px;
+    vertical-align: top;
+}
+
+.old-complains-table-row:nth-child(even) td:nth-child(odd){
+    background-color:#eee;
+}
+
+.old-complains-table-row:nth-child(even) td:nth-child(even){
+    background-color:#fff;
+}
+
+.old-complains-table-row:nth-child(odd) td:nth-child(even){
+    background-color:#ddd;
+}
+
+.old-complains-table-row:nth-child(odd) td:nth-child(odd){
+    background-color:#ccc;
+}
+
+#old-complains-table .del_td{
+    text-align:center !important;
+}
+/*
+#old-complains-table-row td:nth-child(even){
+    background-color:#eee;
+}
+
+#old-complains-table tr:nth-child(even){
+    background-color:#ddd;
+}
+
+#old-complains-table tr:nth-child(odd){
+    background-color:#fff;
+}
+*/
+#excel-download{
+    width:100%;
+    background:none;
+    border:1px solid #ddd;
+    transition: all 0.15s ease-in-out;
+}
+
+.sensitive-complain td:nth-child(even){
+    background-color:rgb(255,230,230) !important;
+}
+
+.sensitive-complain td:nth-child(odd){
+    background-color:rgb(255,200,200) !important;
+}

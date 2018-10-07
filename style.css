@@ -1,0 +1,74 @@
+/*
+(c) Harshal Gajjar (gotoharshal@gmail.com)
+This code is available under GNU General Public Licence v3
+*/
+
+@font-face{
+    font-family:logo;
+    src: url(resources/fonts/court.woff);
+    font-weight: 600 !important;
+}
+
+body{
+    margin:0px;
+    color:#333;
+    padding:10px;
+    padding-top:60px;
+    font-family: logo;
+}
+
+h6{
+  font-family:logo;
+}
+
+h5{
+  font-family:logo;
+}
+
+h4{
+  font-family:logo;
+}
+
+h3{
+  font-family:logo;
+}
+
+h2{
+  font-family:logo;
+}
+
+h1{
+  font-family:logo;
+}
+
+.navbar-default{
+    background:#fff;
+    border:0px;
+}
+
+.well{
+    color:#333;
+    border-radius:0px;
+}
+
+.error{
+    color:#ff5956;
+}
+
+.logo{
+    font-family:logo;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+.del_button a{
+    color:rgba(255,0,0,0.5) !important;
+}
+
+.del_button:hover{
+    color:rgba(255,0,0,0.5);
+    text-decoration: none;
+    cursor: pointer;
+}

@@ -1,0 +1,45 @@
+/*
+(c) Harshal Gajjar (gotoharshal@gmail.com)
+This code is available under GNU General Public Licence v3
+*/
+
+#login_well{
+    width:200px;
+}
+
+#login_well input{
+    width:100%;
+    text-align: left;
+    background:#fff;
+    border:1px solid #b4b4b4;
+}
+
+#forgot-password{
+  border:0px !important;
+  font-size: 0.7em !important;
+  color: #aaa;
+  transition: 0.5s color ease-in-out;
+}
+
+#forgot-password:hover{
+  border:0px !important;
+  font-size: 0.7em !important;
+  color: #00a;
+}
+
+#login_well input[type='submit']{
+    background:#fff;
+}
+
+body{
+    width:100vw;
+    height:100vh;
+    padding:0px !important;
+    padding-top:100px !important;
+}
+
+.power{
+    position:fixed;
+    bottom:10px;
+    width:100%;
+}

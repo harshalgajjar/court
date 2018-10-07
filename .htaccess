@@ -1,0 +1,5 @@
+# (c) Harshal Gajjar (gotoharshal@gmail.com)
+# This code is available under GNU General Public Licence v3
+
+#Alternate default index page
+DirectoryIndex login.php

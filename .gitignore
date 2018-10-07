@@ -1,4 +1,3 @@
 #Untracked files:
-connections/local_connect.php
-connections/web_connect.php
+connections/*
 **/.DS_Store

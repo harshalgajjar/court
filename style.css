@@ -63,12 +63,13 @@ a:hover{
     text-decoration: none;
 }
 
-.del_button a{
-    color:rgba(255,0,0,0.5) !important;
+.del_button{
+    color:rgba(255,0,0,0.5);
+    font-family: sans-serif;
 }
 
 .del_button:hover{
-    color:rgba(255,0,0,0.5);
+    color:rgba(255,0,0,1);
     text-decoration: none;
     cursor: pointer;
 }

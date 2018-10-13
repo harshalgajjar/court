@@ -7,11 +7,11 @@ date_default_timezone_set('Asia/Kolkata');
 
 if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND ($_SESSION['level']=="admin" || $_SESSION['level']=="secy" || $_SESSION['level']=="warden" || $_SESSION['level']=="gsha")){
 
-	if(isset($_GET['del_submit'])){
+	if(isset($_POST['del_submit'])){
 
 		include_once "../connections/connect.php";
 
-		$complain_id=$_GET['complain_id'];
+		$complain_id=$_POST['complain_id'];
 
 		$sql="SELECT * from complains WHERE complain_id='$complain_id'";
 		$request=mysqli_query($conn,$sql);
@@ -72,24 +72,31 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND ($_SESSION['
 		$mail->Body = "Hello " . $complain_info['roll_no'] . ", your complaint has been marked as resolved. Please contact Hostel Secretary or add the complaint again if you think this is a mistake.<hr />Complaint details:<br />Hostel no: ".$complain_info['hostel_no']."<br/>Floor no: ".$complain_info['floor_no']."<br/>Room no: ".$complain_info['room_no']."<br />Issue type: ".$complain_info['issue_type']."<br/>Roll no: ".$complain_info['roll_no']."<br />Phone no: ".$complain_info['phone_no']."<br/>Issue:".$complain_info['issue']."<br /><br />Court";
 		$mail->AltBody = "Hello " . $complain_info['roll_no'] . ", your complaint has been marked as resolved. Please contact Hostel Secretary or add the complaint again if you think this is a mistake.<hr />Complaint details:<br />Hostel no: ".$complain_info['hostel_no']."<br/>Floor no: ".$complain_info['floor_no']."<br/>Room no: ".$complain_info['room_no']."<br />Issue type: ".$complain_info['issue_type']."<br/>Roll no: ".$complain_info['roll_no']."<br />Phone no: ".$complain_info['phone_no']."<br/>Issue:".$complain_info['issue']."<br /><br />Court";
 
-		if(!$mail->send()) echo "Mailer Error: " . $mail->ErrorInfo;
-		else echo "Message has been sent successfully";
+		//if(!$mail->send()) echo "Mailer Error: " . $mail->ErrorInfo;
+		//else echo "Message has been sent successfully";
 
 		$sql="DELETE FROM complains WHERE complain_id='$complain_id'";
 		$request=mysqli_query($conn,$sql);
 
 		if($request){
-			echo "Success! <p>You'll be redirected back, please <span style='font-weight:700'>don't</span> refresh the page</p>";
+			echo "success";
+
+			//echo "Success! <p>You'll be redirected back, please <span style='font-weight:700'>don't</span> refresh the page</p>";
 			//$_SESSION['last_del_post']=1;
-			header('Location:../admin.php');
+
+			//header('Location:../admin.php');
 		}else{
-			echo "Failed! <p>Try refreshing the page and if that doesn't work, contact network administrator</p>";
-			echo mysqli_error($conn);
+			echo "Database Connection Failed";
+
+			//echo "Failed! <p>Try refreshing the page and if that doesn't work, contact network administrator</p>";
+			//echo mysqli_error($conn);
+
 		}
 	}
 
 } else{
-	header('Location:../admin.php');
+	echo "Invalid login";
+	//header('Location:../admin.php');
 }
 
 ?>

@@ -678,7 +678,17 @@ $ncomplains_hostel=0;
 										$sql.="WHERE issue_type LIKE '$_POST[type_specific]' ";
                     else if($_SESSION['level']=="warden" || $_SESSION['level']=="secy")
                     $sql.="and issue_type LIKE '$_POST[type_specific]' ";
-									}
+
+                    if($_POST['hostel_specific']!=""){
+                      $sql.="and hostel_no='$_POST[hostel_specific]' ";
+                    }
+
+									}else if($_POST['hostel_specific']!=""){
+                    if($_SESSION['level']=="gsha")
+                    $sql.="WHERE hostel_no='$_POST[hostel_specific]' ";
+                    else if($_SESSION['level']=="warden" || $_SESSION['level']=="secy")
+                    $sql.="and hostel_no='$_POST[hostel_specific]' ";
+                  }
 
 									if(!empty($_POST['hostel_sort']) OR !empty($_POST['floor_sort']) OR !empty($_POST['id_sort']) OR !empty($_POST['room_sort']) OR !empty($_POST['time_sort']) OR !empty($_POST['type_sort']))
 									$sql.="ORDER BY ";
@@ -744,30 +754,93 @@ $ncomplains_hostel=0;
 							<table style="width:100%" id="old-complains-table" class="table2excel">
 							<tr id="log-header" class="noExl">
 								<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-								<td>Id<br /><select name="id_sort"><option value="">sort</option><option value="ASC">ascend</option><option value="DESC">descen</option></select></td>
-                <td>Hostel<br /><select name="hostel_sort"><option value="">sort</option><option value="ASC">ascend</option><option value="DESC">descen</option></select></td>
-                <td>Floor<br /><select name="floor_sort"><option value="">sort</option><option value="ASC">ascend</option><option value="DESC">descen</option></select></td>
-								<td>Room<br /><select name="room_sort"><option value="">sort</option><option value="ASC">ascend</option><option value="DESC">descen</option></select></td>
+								<td>Id<br />
+                  <select name="id_sort">
+                    <option value="" <?php if (isset($_POST['id_sort']) && ($_POST['id_sort']=="")) echo "selected='selected'"; ?> >-</option>
+                    <option value="ASC" <?php if (isset($_POST['id_sort']) && ($_POST['id_sort']=="ASC")) echo "selected='selected'"; ?> >ascend</option>
+                    <option value="DESC" <?php if (isset($_POST['id_sort']) && ($_POST['id_sort']=="DESC")) echo "selected='selected'"; ?> >descen</option>
+                  </select>
+                </td>
+
+                <td>Hostel<br />
+                  <select name="hostel_sort">
+                    <option value="" <?php if (isset($_POST['hostel_sort']) && ($_POST['hostel_sort']=="")) echo "selected='selected'"; ?> >-</option>
+                    <option value="ASC" <?php if (isset($_POST['hostel_sort']) && ($_POST['hostel_sort']=="ASC")) echo "selected='selected'"; ?> >ascend</option>
+                    <option value="DESC" <?php if (isset($_POST['hostel_sort']) && ($_POST['hostel_sort']=="DESC")) echo "selected='selected'"; ?> >descen</option>
+                  </select>
+
+                    <?php
+                     if($_SESSION['level']=="gsha" || $_SESSION['level']=="admin"){
+                    ?>
+										<br /><select name="hostel_specific">
+													<option value="">show all</option>
+    												<?php
+    													$sql_2="SELECT DISTINCT hostel_no FROM complains"; //preparing SQL command to get all issue types for the form
+    													$request_2=mysqli_query($conn,$sql_2);
+    													while($row_2=mysqli_fetch_array($request_2)){ //echoing all issue types
+    												?>
+    													<option value="<?php echo $row_2['hostel_no'];?>" <?php if (isset($_POST['hostel_specific']) && ($_POST['hostel_specific']==$row_2['hostel_no'])) echo "selected='selected'"; ?> ><?php echo $row_2['hostel_no'];?></option>
+    												<?php
+    													}
+    												?>
+											  </select></td>
+                    <?php
+                    }
+                    ?>
+                </td>
+
+                <td>Floor<br />
+                  <select name="floor_sort">
+                    <option value="" <?php if (isset($_POST['floor_sort']) && ($_POST['floor_sort']=="")) echo "selected='selected'"; ?> >-</option>
+                    <option value="ASC" <?php if (isset($_POST['floor_sort']) && ($_POST['floor_sort']=="ASC")) echo "selected='selected'"; ?> >ascend</option>
+                    <option value="DESC" <?php if (isset($_POST['floor_sort']) && ($_POST['floor_sort']=="DESC")) echo "selected='selected'"; ?> >descen</option>
+                  </select>
+                </td>
+
+								<td>Room<br />
+                  <select name="room_sort">
+                    <option value="" <?php if (isset($_POST['room_sort']) && ($_POST['room_sort']=="")) echo "selected='selected'"; ?> >-</option>
+                    <option value="ASC" <?php if (isset($_POST['room_sort']) && ($_POST['room_sort']=="ASC")) echo "selected='selected'"; ?> >ascend</option>
+                    <option value="DESC" <?php if (isset($_POST['room_sort']) && ($_POST['room_sort']=="DESC")) echo "selected='selected'"; ?> >descen</option>
+                  </select>
+                </td>
+
 								<td>Issue</td>
-								<td>Type<br /><select name="type_sort"><option value="">sort</option><option value="ASC">ascend</option><option value="DESC">descen</option></select>
+
+								<td>Type<br />
+                  <select name="type_sort">
+                    <option value="" <?php if (isset($_POST['type_sort']) && ($_POST['type_sort']=="")) echo "selected='selected'"; ?> >-</option>
+                    <option value="ASC" <?php if (isset($_POST['type_sort']) && ($_POST['type_sort']=="ASC")) echo "selected='selected'"; ?> >ascend</option>
+                    <option value="DESC" <?php if (isset($_POST['type_sort']) && ($_POST['type_sort']=="DESC")) echo "selected='selected'"; ?> >descen</option>
+                  </select>
+
 										<br /><select name="type_specific">
 													<option value="">show all</option>
-
-												<?php
-													$sql_2="SELECT * FROM issue_type_table"; //preparing SQL command to get all issue types for the form
-													$request_2=mysqli_query($conn,$sql_2);
-
-													while($row_2=mysqli_fetch_array($request_2)){ //echoing all issue types
-												?>
-													<option value="<?php echo $row_2['issue_type_option_name'];?>"><?php echo $row_2['issue_type_option_name'];?></option>
-												<?php
-													}
-												?>
+    												<?php
+    													$sql_2="SELECT * FROM issue_type_table"; //preparing SQL command to get all issue types for the form
+    													$request_2=mysqli_query($conn,$sql_2);
+    													while($row_2=mysqli_fetch_array($request_2)){ //echoing all issue types
+    												?>
+    													<option value="<?php echo $row_2['issue_type_option_name'];?>" <?php if (isset($_POST['type_specific']) && ($_POST['type_specific']==$row_2['issue_type_option_name'])) echo "selected='selected'"; ?> ><?php echo $row_2['issue_type_option_name'];?></option>
+    												<?php
+    													}
+    												?>
 											  </select></td>
+
                 <td>Roll<br />Number</td>
+
                 <td>Phone</td>
-								<td>Time<br /><select name="time_sort"><option value="">sort</option><option value="ASC">ascend</option><option value="DESC">descen</option></select></td>
+
+								<td>Time<br />
+                  <select name="time_sort">
+                    <option value="" <?php if (isset($_POST['time_sort']) && ($_POST['time_sort']=="")) echo "selected='selected'"; ?> >-</option>
+                    <option value="ASC" <?php if (isset($_POST['time_sort']) && ($_POST['time_sort']=="ASC")) echo "selected='selected'"; ?> >ascend</option>
+                    <option value="DESC" <?php if (isset($_POST['time_sort']) && ($_POST['time_sort']=="DESC")) echo "selected='selected'"; ?> >descen</option>
+                  </select>
+                </td>
+
 								<td><input type="submit" name="sort_submit" value="GO"/></td>
+
 								</form>
 							</tr>
 
@@ -802,7 +875,7 @@ $ncomplains_hostel=0;
 										$del_link=str_replace('admin.php','actions/delete.php',$_SERVER['PHP_SELF'])."?".http_build_query($content_for_deletion); //deletion link
 							?>
 
-										<tr <?php if($issue_type == "sensitive") echo "class='old-complains-table-row sensitive-complain'"; else echo "class='old-complains-table-row'";?> >
+										<tr id="complaint-<?php echo $complain_id; ?>" <?php if($issue_type == "sensitive") echo "class='old-complains-table-row sensitive-complain'"; else echo "class='old-complains-table-row'";?> >
 											<td><?php echo $complain_id;?></td>
 											<td><?php echo $hostel_no;?></td>
 											<td><?php echo $floor_no;?></td>
@@ -812,7 +885,8 @@ $ncomplains_hostel=0;
 											<td><?php echo $roll_no;?></td>
 											<td><?php echo $phone_no;?></td>
 											<td><?php echo $time;?></td>
-											<td class="del_button del_td noExl"><span><a href="<?php echo $del_link;?>" onclick="return confirm('Are you sure?')">x</a></span></td>
+											<!-- <td class="del_button del_td noExl"><span><a href="<?php echo $del_link;?>" onclick="return confirm('Are you sure?')">x</a></span></td> -->
+                      <td class="del_td noExl"><span class="del_button" onclick="deleteID(<?php echo $complain_id; ?>)">x</span></td>
 										</tr>
 
 							<?php
@@ -823,6 +897,35 @@ $ncomplains_hostel=0;
 						</table><br />
 						<button id="excel-download">Download</button>
 					</div>
+
+          <script>
+          function deleteID(complaint_id){
+            console.log("delete-"+complaint_id+" requested");
+            var elementID="#complaint-"+complaint_id;
+            console.log(elementID);
+            //$(elementID).remove();
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", './actions/delete.php', true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {//Call a function when the state changes.
+              if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                console.log(xhr.responseText);
+                  if(xhr.responseText=="success"){
+                    $(elementID).remove();
+                  }else{
+                    window.alert("Failed - Error:\n"+xhr.responseText);
+                  }
+              }
+            }
+
+            xhr.send("del_submit=submit&complain_id="+complaint_id);
+
+
+
+          }
+          </script>
 
 				<?php
 				} //ONLY FOR ADMINS BLOCK ends

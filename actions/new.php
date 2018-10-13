@@ -206,8 +206,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 						//MAIL ENDS, note: mail error has not been attended
 						//complain successfully handled
 
-						//unset($_SESSION['last_new_post_hostel_no']);
-						$_SESSION['last_new_post_hostel_no']=1;
+						unset($_SESSION['last_new_post_hostel_no']);
 						unset($_SESSION['last_new_post_floor_no']);
 						unset($_SESSION['last_new_post_room_no']); //resetting the variable to allow new complain posting
 						unset($_SESSION['last_new_post_issue']); //resetting the variable to allow new complain posting

@@ -51,7 +51,7 @@ $ncomplains_hostel=0;
 			<div class="collapse navbar-collapse" id="mainbar">
 				<ul class="nav navbar-nav navbar-right">
 					<?php if($_SESSION['level']=="gsha"){?><li><a href="team.php">Team</a></li> <?php } ?>
-          <?php if($_SESSION['level']=="gsha"){?><li><a href="mail.php">Mail</a></li> <?php } ?>
+          <?php if($_SESSION['level']=="gsha" || $_SESSION['level']=="warden" || $_SESSION['level']=="secy"){?><li><a href="mail.php">Mail</a></li> <?php } ?>
 					<li><a href="logout.php">Log out</a></li>
 				</ul>
 			</div>
@@ -81,7 +81,7 @@ $ncomplains_hostel=0;
 								i.e. after user rectifies all errors in the data entered and clicks "Submit"
 
 						*/?>
-            <span style="width:47%;float:left;"><span class="logo">Hostel Number</span><span class="required">*</span><br /><input type="text" placeholder="0,1,2,.." name="hostel_no" value="<?php if (isset($_SESSION['last_new_post'])) {echo $_SESSION['last_new_post_hostel_no']; } else {echo $_SESSION['hostel'];} //filling room number of failed post attempt ?>"/></span>
+            <span style="width:47%;float:left;"><span class="logo">Hostel Number</span><span class="required">*</span><br /><input type="text" placeholder="0,1,2,.." name="hostel_no" value="<?php if (isset($_SESSION['last_new_post'])) {echo $_SESSION['last_new_post_hostel_no']; } //filling room number of failed post attempt ?>"/></span>
             <span style="width:47%;float:right;"><span class="logo">Floor Number</span><br /><input type="text" placeholder="0,1,2,.." name="floor_no" value="<?php if (isset($_SESSION['last_new_post'])) {echo $_SESSION['last_new_post_floor_no']; } //filling room number of failed post attempt ?>"/></span><br />
 
 						<span class="logo">Room Number</span><br /><input type="text" name="room_no" value="<?php if (isset($_SESSION['last_new_post'])) {echo $_SESSION['last_new_post_room_no']; } //filling room number of failed post attempt ?>"/><br />

@@ -5,7 +5,7 @@
 session_start(); //starting session
 error_reporting(0);
 date_default_timezone_set('Asia/Kolkata'); //changing default time zone
-if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND $_SESSION['level']=='gsha'){ //checking for login status
+if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND ($_SESSION['level']=='gsha' || $_SESSION['level']=='warden' || $_SESSION['level']=='secy')){ //checking for login status
   include_once "connections/connect.php"; //connecting to database
   $formcounter=0;
   ?>
@@ -65,12 +65,18 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND $_SESSION['l
             <form name="announce" action="mail.php" method="POST" onsubmit="return announce_submit()">
               To:<br />
               <?php
-              $sql = "SELECT distinct hostel_no FROM complains";
-              $request = mysqli_query($conn, $sql);
-              $nrows = mysqli_num_rows($request);
-              while($row = mysqli_fetch_array($request)){
+              if($_SESSION['level']=="gsha"){
+                $sql = "SELECT distinct hostel_no FROM complains";
+                $request = mysqli_query($conn, $sql);
+                $nrows = mysqli_num_rows($request);
+                while($row = mysqli_fetch_array($request)){
+                  ?>
+                  <input type="checkbox" name="hostel" value="<?php echo $row['hostel_no']; ?>" checked="checked"> Hostel <?php echo $row['hostel_no']; ?>
+                  <?php
+                }
+              }else if($_SESSION['level']=="warden" || $_SESSION['level']=="secy"){
                 ?>
-                <input type="checkbox" name="hostel" value="<?php echo $row['hostel_no']; ?>" checked="checked"> Hostel <?php echo $row['hostel_no']; ?>
+                  <input type="checkbox" name="hostel" value="<?php echo $_SESSION['hostel']; ?>" checked="checked"> Hostel <?php echo $_SESSION['hostel']; ?>
                 <?php
               }
               ?>
@@ -148,6 +154,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND $_SESSION['l
               document.forms["announce"]["message"].disabled=true;
               document.getElementById('announce_submit_button').disabled=true;
             }else{
+              console.log(xhr.responseText);
               document.getElementById('announce_submit_button').style.backgroundColor='rgb(222,106,106)';
               document.getElementById('announce_submit_button').style.color='#fff';
               document.getElementById('announce_submit_button').value='X (Click to retry)';
@@ -155,7 +162,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success" AND $_SESSION['l
         }
       }
 
-      xhr.send("type=announce&hostels="+hostels.join(",")+"&issues="+issues.join(",")+"&sender=gsha&message="+message+"&subject="+subject);
+      xhr.send("type=announce&hostels="+hostels.join(",")+"&issues="+issues.join(",")+"&sender=<?php echo $_SESSION['level']; ?>&senderHostel=<?php echo $_SESSION['hostel'];?>&message="+message+"&subject="+subject);
 
       return false;
     }

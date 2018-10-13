@@ -50,7 +50,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 			$_SESSION['last_new_issue_type']=$_POST['issue_type'];
 			$problems++;
 		}
-		else if(!empty($floor_no) && ($floor_no>2 || $floor_no<0)){ //floor number verification
+		else if(!empty($floor_no) && ($floor_no>3 || $floor_no<0)){ //floor number verification
 			$_SESSION['last_new_post']="Invalid floor number"; //message to be returned
 			header('Location:../admin.php');
 			$_SESSION['last_new_post_hostel_no']=$_POST['hostel_no'];

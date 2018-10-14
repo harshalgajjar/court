@@ -1,0 +1,48 @@
+/*
+(c) Harshal Gajjar (gotoharshal@gmail.com)
+This code is available under GNU General Public Licence v3
+*/
+
+#lr_container_fluid{
+  background-color: #eee;
+}
+
+.vis-saturday, .vis-sunday{
+  background-color: rgba(100,200,100,0.1);
+}
+
+.text-area-custom{
+  height:159px;
+}
+
+h4{
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.form-group{
+  display: block;
+}
+
+.form-control{
+  border-radius: 2px !important;
+  background: #fff !important;
+  height:2em;
+}
+
+.input-group-addon{
+  height:2em;
+}
+
+#lr_container_fluid input{
+  border-radius: 2px !important;
+  color:#222;
+}
+
+#BingMap{
+  padding:10px;
+  border: 1px solid #aaa;
+  border-top:0px;
+  border-radius: 2px;
+  margin-bottom:20px;
+}

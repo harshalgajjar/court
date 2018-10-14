@@ -54,7 +54,6 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
     function GetMap()
     {
       map = new Microsoft.Maps.Map('#BingMap', {});
-      map2 = new Microsoft.Maps.Map('#BingMapIndividual', {});
 
       map.setView({
         //mapTypeId: Microsoft.Maps.MapTypeId.aerial,
@@ -62,13 +61,9 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         zoom: 4
       });
 
-      map2.setView({
-        //mapTypeId: Microsoft.Maps.MapTypeId.aerial,
-        center: new Microsoft.Maps.Location(22.322314, 78.970009),
-        zoom: 4
-      });
-
       Microsoft.Maps.Events.addHandler(map, 'click', function (e) {
+
+        if(submitted) return;
 
         for (var i = map.entities.getLength() - 1; i >= 0; i--) {
           var pushpin = map.entities.get(i);
@@ -86,6 +81,13 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
       });
 
+      <?php if($_SESSION['level']=="warden"){?>
+      map2 = new Microsoft.Maps.Map('#BingMapIndividual', {});
+      map2.setView({
+        //mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+        center: new Microsoft.Maps.Location(22.322314, 78.970009),
+        zoom: 4
+      });
 
       for (var item in items._data) {
           var coordinatesInfo = items._data[item].destination.replace("%2C",",").split(",");
@@ -95,6 +97,8 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
           });
           map2.entities.push(newPushpin);
       }
+
+      <?php } ?>
 
     }
 
@@ -140,30 +144,30 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
               <div class="row">
                 <div class="col-sm-6">
-                  Name <input name="name" type="text">
+                  Name<span class="required">*</span> <input name="name" type="text">
                 </div>
 
                 <div class="col-sm-6">
-                  Roll Number <input name="roll_no" type="text">
+                  Roll Number<span class="required">*</span> <input name="roll_no" type="text">
                 </div>
               </div><br />
               <div class="row">
                 <div class="col-sm-4">
-                  Hostel Number <input name="hostel_no" placeholder="0,1,2,..." type="text">
+                  Hostel Number<span class="required">*</span> <input name="hostel_no" placeholder="0,1,2,..." type="text">
                 </div>
 
                 <div class="col-sm-4">
-                  Floor Number <input name="floor_no" placeholder="0,1,2,..." type="text">
+                  Floor Number<span class="required">*</span> <input name="floor_no" placeholder="0,1,2,..." type="text">
                 </div>
 
                 <div class="col-sm-4">
-                  Room Number <input name="room_no" type="text">
+                  Room Number<span class="required">*</span> <input name="room_no" type="text">
                 </div>
               </div><br />
               <div class="row">
 
                 <div class="col-sm-6">
-                  Personal Contact Number
+                  Personal Contact Number<span class="required">*</span>
                   <div class="input-group">
                     <span class="input-group-addon">+91</span>
                     <input type="text" class="form-control" name="pContact">
@@ -171,7 +175,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
                 </div>
 
                 <div class="col-sm-6">
-                  Destination Contact Number
+                  Destination Contact Number<span class="required">*</span>
                   <div class="input-group">
                     <span class="input-group-addon">+91</span>
                     <input type="text" class="form-control" name="dContact">
@@ -184,7 +188,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
               <h4>DEPARTURE (from Campus)</h4>
 
-              Date and Time
+              Date and Time<span class="required">*</span>
               <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy HH:ii p" data-link-field="dtp_input1">
                 <input name="dTime" class="form-control" type="text" value="" readonly>
                 <!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
@@ -194,7 +198,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
               <h4>ARRIVAL (into Campus)</h4>
 
-              Date and Time
+              Date and Time<span class="required">*</span>
               <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy HH:ii p" data-link-field="dtp_input1">
                 <input name="aTime" class="form-control" size="16" type="text" value="" readonly>
                 <!-- <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> -->
@@ -202,15 +206,15 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
                 <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
               </div>
 
-              Cause of the journey
+              Cause of the journey<span class="required">*</span>
               <textarea name="cause" class="text-area-custom"></textarea>
 
             </div>
 
             <div class="col-sm-6">
 
-              Destination
-              <input name="destination" id="dest-Coordinates" type="text" placeholder="Select on map" style="cursor: not-allowed; height:2em;" readonly />
+              Destination<span class="required">*</span>
+              <input name="destination" id="dest-Coordinates" type="text" placeholder="Mark on map" style="cursor: not-allowed; height:2em;" readonly />
               <div id="BingMap" style="position:relative;width:100%;height:500px;"></div>
 
             </div>
@@ -322,7 +326,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
     var container = document.getElementById('visualization');
     var d = new Date();
-    d.setDate(d.getDate() - 2)
+    d.setDate(d.getDate() - 2);
 
     var options = {
       start: d,
@@ -492,6 +496,8 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
     <script>
 
+    var submitted=false;
+
     function isNumber(num){
       return !isNaN(parseFloat(num)) && isFinite(num);
     }
@@ -538,8 +544,8 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         return false;
       }
 
-      if((Date.parse(aTime)-Date.parse(dTime))<0){
-        window.alert("You need to leave BEFORE coming back");
+      if((Date.parse(aTime)-Date.parse(dTime))<21600000){
+        window.alert("A minimum of 6 hours is required to be spent outside the campus");
         return false;
       }
 
@@ -582,6 +588,22 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
           console.log(xhr.responseText);
           if(xhr.responseText=="success"){
+
+            document.forms["leave_request"]["name"].disabled=true;
+            document.forms["leave_request"]["name"].disabled=true;
+            document.forms["leave_request"]["roll_no"].disabled=true;
+            document.forms["leave_request"]["pContact"].disabled=true;
+            document.forms["leave_request"]["dContact"].disabled=true;
+            document.forms["leave_request"]["dTime"].disabled=true;
+            document.forms["leave_request"]["aTime"].disabled=true;
+            document.forms["leave_request"]["destination"].disabled=true;
+            document.forms["leave_request"]["cause"].disabled=true;
+            document.forms["leave_request"]["hostel_no"].disabled=true;
+            document.forms["leave_request"]["floor_no"].disabled=true;
+            document.forms["leave_request"]["room_no"].disabled=true;
+
+            submitted=true;
+
             document.getElementById('lr_submit_button').style.backgroundColor='#5FBF5F';
             document.getElementById('lr_submit_button').style.color='#fff';
             document.getElementById('lr_submit_button').value='✔';

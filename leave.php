@@ -238,6 +238,15 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         ?>
         <h3 style="display:inline-block;">Requests</h3> (<?php echo mysqli_num_rows($request); ?> Pending)
 
+        <br />
+        Actions:
+        <ul style="list-style-type: circle;">
+          <li>Double Click: Approve</li>
+          <li>Single Click: View on Map (and show Decline button)</li>
+          <li>Right Click: Reset decision</li>
+        </ul>
+        All actions will send an email to the student.<br /><br />
+
         <div id="visualization" class="vis-week1"></div>
 
         <div id="BingMapIndividual" style="position:relative;width:100%;height:500px;"></div>

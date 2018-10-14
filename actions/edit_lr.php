@@ -43,7 +43,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
       echo "add failed1";
     }
 
-    $row = mysqli_fetch_array($request);
+    // $row = mysqli_fetch_array($request);
 
     // echo mysqli_num_rows($request);
 
@@ -64,11 +64,12 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
       while($row=mysqli_fetch_array($request)){
         $mail->addCC($row['email'], $row['name']);
+        // echo $row['email'];
       }
 
       $mail->isHTML(true);
       $mail->Subject = "[Court] New Leave Request";
-      $mail->Body = "Name: $name<br/>Roll number: $roll_no<br />Room Number: $room_no<br/>Personal Contact: +91$pContact<br />Destination Contact: +91$dContact<br/>Departure: " . date("d-m-Y H:i:s",$dtimeStamp1) . "<br />Arrival: " . date("d-m-Y H:i:s",$atimeStamp1) . "<br />Cause: $cause<br /><br />Court";
+      $mail->Body = "Name: $name<br/>Roll number: $roll_no<br />Room Number: $room_no<br/>Personal Contact: +91$pContact<br />Destination Contact: +91$dContact<br/>Departure: " . date("d-m-Y H:i:s",$dtimeStamp1) . "<br />Arrival: " . date("d-m-Y H:i:s",$atimeStamp2) . "<br />Cause: $cause<br /><br />Court";
 
       if(!$mail->send())
       {

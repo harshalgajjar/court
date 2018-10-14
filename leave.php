@@ -218,7 +218,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         </div>
         <input id="lr_submit_button" type="submit" name="add" value="Submit" /><br /><br />
         </form>
-        <button onclick="lr_submit()" />hello</button>
+        <!-- <button onclick="lr_submit()" />hello</button> -->
       </div>
     </div>
 

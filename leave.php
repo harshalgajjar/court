@@ -354,7 +354,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
     function removing(item, callback){
       console.log(item);
 
-      if(!confirm("Do you want to decline "+item.content+"'s leave request?")){
+      if(!confirm("Do you want to decline "+item.name+"'s leave request?")){
         return;
       }
 

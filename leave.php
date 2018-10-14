@@ -245,7 +245,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
           <li>Single Click: View on Map (and show Decline button)</li>
           <li>Right Click: Reset decision</li>
         </ul>
-        All actions will send an email to the student.<br /><br />
+        Every action will send an email to the student.<br /><br />
 
         <div id="visualization" class="vis-week1"></div>
 

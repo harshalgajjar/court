@@ -15,6 +15,29 @@ This code is available under GNU General Public Licence v3
   height:159px;
 }
 
+#S-decision{
+  width:100%;
+  text-align:center;
+}
+
+#S-Choice-A{
+  background:rgba(100,200,100,0.6);
+  margin:5px;
+  border-radius: 5px;
+}
+
+#S-Choice-D{
+  background:rgba(200,100,100,0.6);
+  margin:5px;
+  border-radius: 5px;
+}
+
+.level{
+  text-transform: uppercase;
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
 h4{
   font-weight: bold;
   font-size: 120%;

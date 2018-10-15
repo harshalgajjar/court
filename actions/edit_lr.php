@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $dTime = $_POST['dTime'];
     $aTime = $_POST['aTime'];
     $destination = $_POST['destination'];
-    $cause = $_POST['cause'];
+    $cause = mysqli_real_escape_string($conn,$_POST['cause']);
     $hostel_no = $_POST['hostel_no'];
     $floor_no = $_POST['floor_no'];
     $room_no = $_POST['room_no'];

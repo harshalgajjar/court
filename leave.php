@@ -238,23 +238,51 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         ?>
         <h3 style="display:inline-block;">Requests</h3> (<?php echo mysqli_num_rows($request); ?> Pending)
 
-        <br />
-        Actions:
-        <ul style="list-style-type: circle;">
-          <li>Double Click: Approve</li>
-          <li>Single Click: View on Map (and show Decline button)</li>
-          <li>Right Click: Reset decision</li>
-        </ul>
-        Every action will send an email to the student.<br /><br />
-
         <div id="visualization" class="vis-week1"></div>
 
-        <div id="BingMapIndividual" style="position:relative;width:100%;height:500px;"></div>
+        <div class="row">
+          <div class="col-sm-3" id="Sinfo-col-sm">
+
+            <div style="">
+            <div class="well" style="height:400px; overflow-y: scroll; width:100%;">
+            <div id="Selected-Student">
+              <h4><span id="S-name">Quick Actions</span></h4>
+              <span id="S-roll_no">
+                <ul style="list-style-type: circle;">
+                  <li>Double Click: Approve</li>
+                  <li>Single Click: View on Map</li>
+                  <li>Right Click: Reset decision</li>
+                </ul>
+                Every action will be notified to the student immediately.
+              </span><br /><br />
+              <span id="S-pContact"></span><br />
+              <span id="S-dContact"></span><br /><br />
+              <span id="S-duration"></span><br />
+              <span id="S-cause" style="height:100px;"></span><br /><br />
+              <table id="S-decision">
+
+              </table>
+            </div>
+          </div>
+        </div>
+
+          </div>
+            <div class="col-sm-9" id="map-col-sm">
+              <div id="BingMapIndividual" style="position:relative;width:100%;height:400px;"></div>
+            </div>
+        </div>
+
+        <div id="BingMapIndividual" style="position:relative;width:100%;height:400px;"></div>
+
+        <!-- <div style="height:100vh;"></div> -->
 
       </div>
     </div>
 
     <script>
+
+    var selected=-1;
+
     var items = new vis.DataSet([
       <?php
       $i=1;
@@ -275,11 +303,11 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         //{id: 40, content: "Harshal Gajjar", start: Tue Nov 13 2018 23:25:00 GMT+0530 (IST), end: Thu Nov 15 2018 07:30:00 GMT+0530 (IST), group: 6}
         //{id: 2, group: 1, start: Sun Oct 14 2018 02:54:37 GMT+0530 (IST), end: Sun Oct 14 2018 06:54:37 GMT+0530 (IST), type: "background", …}
 
-        $entry = "{id: " . $row['id'] . ", content: '" . $row['name'] . " <sup><a href=\'mailto:" . $row['roll_no'] . "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>" . $row['roll_no'] . "</a></sup>" . "', start: new Date(" . $dDate . "),end: new Date(" . $aDate . "), group: " . $row['room_no'] . ", destination: '" . $row["destination"] . "', roll_no:'" . $row["roll_no"] . "', name: '" . $row["name"] . "' , style: '";
+        $entry = "{id: " . $row['id'] . ", content: '" . $row['name'] . " <sup><a href=\'mailto:" . $row['roll_no'] . "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>" . $row['roll_no'] . "</a></sup>" . "', start: new Date(" . $dDate . "),end: new Date(" . $aDate . "), group: " . $row['room_no'] . ", destination: '" . $row["destination"] . "', roll_no:'" . $row["roll_no"] . "', name: '" . $row["name"] . "', pContact: '" . $row["pnumber"] . "', dContact:'" . $row["dnumber"] . "', status: '" . $row["status"] . "', cause:'" . addslashes(urldecode(str_replace("%3E",">",str_replace("%2F","/",(str_replace("%3C","<",(str_replace("%2C",",",(str_replace("'", "\'", str_replace('"', '\"', $row['cause']))))))))))) . "' , style: '";
           if($row['status']=="Approved") $entry = $entry . "background-color: rgba(100,200,100,0.6); border: rgb(0,255,0);";
           else if($row['status']=="Declined") $entry = $entry . "background-color: rgba(200,100,100,0.5); border: rgb(255,0,0);";
           else $entry = $entry . "background-color: rgba(0,0,0,0.2); border: #000;";
-          $entry = $entry . "', editable: {updateTime: false, remove: true}}";
+          $entry = $entry . "', editable: {updateTime: false, remove: false}}";
 
         echo $entry;
 
@@ -364,6 +392,139 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
     // console.log(items._data["40"].style="background-color: red;");
     // timeline.setItems(items);
 
+    function getDay(date){
+      switch(date.getDay()){
+        case 1:
+        return "Mon";
+        case 2:
+        return "Tue";
+        case 3:
+        return "Wed";
+        case 4:
+        return "Thu";
+        case 5:
+        return "Fri";
+        case 6:
+        return "Sat";
+        case 0:
+        return "Sun";
+      }
+
+    }
+
+    function viewInfo(id){
+      if(items._data[id].status=="Approved"){
+        document.getElementById("S-decision").innerHTML="<tr><td><div id='S-Choice-D' onclick='decline()'>Decline</div></td></tr><tr><td><div id='S-Choice-R' onclick='resetDecision()'>Reset</div></td></tr>";
+      }else if(items._data[id].status=="Declined"){
+        document.getElementById("S-decision").innerHTML="<tr><td><div id='S-Choice-A' onclick='approve()'>Approve</div></td></tr><tr><td><div id='S-Choice-R' onclick='resetDecision()'>Reset</div></td></tr>";
+      }else{
+        document.getElementById("S-decision").innerHTML="<tr><td><div id='S-Choice-A' onclick='approve()'>Approve</div></td><td><div id='S-Choice-D' onclick='decline()'>Decline</div></td></tr>";
+      }
+
+      var start=new Date(items._data[id].start);
+      var end=new Date(items._data[id].end);
+
+      start = start.getDate()+"/"+start.getMonth()+"/"+start.getFullYear() +" ("+getDay(start)+")";
+      end = end.getDate()+"/"+end.getMonth()+"/"+end.getFullYear() +" ("+getDay(end)+")";
+
+      document.getElementById("S-name").innerHTML=items._data[id].name;
+      document.getElementById("S-roll_no").innerHTML="<a href=\'mailto:" + items._data[id].roll_no + "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>"+items._data[id].roll_no+"</a>";
+      document.getElementById("S-duration").innerHTML="<span class='level'>Period</span><br />"+start + " to "+end;
+      document.getElementById("S-pContact").innerHTML="<span class='level'>Personal Contact</span><br /><a href='tel:"+items._data[id].pContact+"'>"+items._data[id].pContact+"</a>";
+      document.getElementById("S-dContact").innerHTML="<span class='level'>Destination Contact</span><br /><a href='tel:"+items._data[id].dContact+"'>"+items._data[id].dContact+"</a>";
+      document.getElementById("S-cause").innerHTML="<span class='level'>Cause</span><br /> "+items._data[id].cause;
+
+    }
+
+    function approve(){
+      var parameters={
+        action: "approve",
+        id: selected
+      }
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", './actions/edit_lr.php', true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() { //Call a function when the state changes.
+        if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+          console.log(xhr.responseText);
+          if(xhr.responseText=="success"){
+            console.log(items._data[selected].style="background-color: rgba(100,200,100,0.6); border: rgb(0,255,0);");
+            items._data[selected].status="Approved";
+            timeline.setItems(items);
+            console.log("approve success");
+            viewInfo(selected)
+          }else{
+            window.alert("Approval failed");
+            console.log(xhr.responseText);
+          }
+        }
+      }
+
+      xhr.send(encodeURI(jQuery.param(parameters)));
+    }
+
+    function decline(){
+      if(!confirm("Do you want to decline "+items._data[selected].name+"'s leave request?")){
+        return;
+      }
+
+      var parameters={
+        action: "decline",
+        id: selected
+      }
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", './actions/edit_lr.php', true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() { //Call a function when the state changes.
+        if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+          console.log(xhr.responseText);
+          if(xhr.responseText=="success"){
+            console.log(items._data[selected].style="background-color: rgba(200,100,100,0.5); border: rgb(255,0,0);");
+            items._data[selected].status="Declined";
+            timeline.setItems(items);
+            console.log("decline success");
+            viewInfo(selected);
+          }else{
+            window.alert("Decline failed");
+            console.log(xhr.responseText);
+          }
+        }
+      }
+
+      xhr.send(encodeURI(jQuery.param(parameters)));
+    }
+
+    function resetDecision(){
+      var parameters={
+        action: "reset",
+        id: selected
+      }
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", './actions/edit_lr.php', true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() { //Call a function when the state changes.
+        if(this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+          console.log(xhr.responseText);
+          if(xhr.responseText=="success"){
+            console.log(items._data[selected].style="background-color: rgba(0,0,0,0.2); border: rgb(0,0,0);");
+            items._data[selected].status="Approval Pending"
+            timeline.setItems(items);
+            console.log("reset success");
+            viewInfo(selected);
+          }else{
+            window.alert("Reset failed");
+            console.log(xhr.responseText);
+          }
+        }
+      }
+
+      xhr.send(encodeURI(jQuery.param(parameters)));
+    }
+
     function removing(item, callback){
       console.log(item);
 
@@ -406,8 +567,12 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
     }
 
     timeline.on('click',function(properties){
+
       if(!properties.item) return;
+      // console.log(items._data[properties.item].name);
       console.log(properties.item+" clicked once");
+
+      selected=properties.item;
 
       for (var i = map2.entities.getLength() - 1; i >= 0; i--) {
         var pushpin = map2.entities.get(i);
@@ -435,6 +600,8 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
           map2.entities.push(newPushpin);
       }
 
+      viewInfo(properties.item);
+
     });
 
     timeline.on('doubleClick', function (properties) {
@@ -445,6 +612,9 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         action: "approve",
         id: properties.item
       }
+
+      selected=properties.item;
+
       var xhr = new XMLHttpRequest();
       xhr.open("POST", './actions/edit_lr.php', true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -454,6 +624,10 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
           console.log(xhr.responseText);
           if(xhr.responseText=="success"){
             console.log(items._data[properties.item].style="background-color: rgba(100,200,100,0.6); border: rgb(0,255,0);");
+            items._data[properties.item].status="Approved";
+
+            viewInfo(properties.item);
+
             timeline.setItems(items);
             console.log("approve success");
           }else{
@@ -475,6 +649,9 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         action: "reset",
         id: properties.item
       }
+
+      selected=properties.item;
+
       var xhr = new XMLHttpRequest();
       xhr.open("POST", './actions/edit_lr.php', true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -484,8 +661,10 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
           console.log(xhr.responseText);
           if(xhr.responseText=="success"){
             console.log(items._data[properties.item].style="background-color: rgba(0,0,0,0.2); border: rgb(0,0,0);");
+            items._data[properties.item].status="Approval Pending"
             timeline.setItems(items);
             console.log("reset success");
+            viewInfo(properties.item);
           }else{
             window.alert("Reset failed");
             console.log(xhr.responseText);

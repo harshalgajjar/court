@@ -254,7 +254,8 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
                   <li>Right Click: Reset decision</li>
                 </ul>
                 Every action will be notified to the student immediately.
-              </span><br /><br />
+              </span><br />
+              <span id="S-address"></span><br />
               <span id="S-pContact"></span><br />
               <span id="S-dContact"></span><br /><br />
               <span id="S-duration"></span><br />
@@ -303,7 +304,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         //{id: 40, content: "Harshal Gajjar", start: Tue Nov 13 2018 23:25:00 GMT+0530 (IST), end: Thu Nov 15 2018 07:30:00 GMT+0530 (IST), group: 6}
         //{id: 2, group: 1, start: Sun Oct 14 2018 02:54:37 GMT+0530 (IST), end: Sun Oct 14 2018 06:54:37 GMT+0530 (IST), type: "background", …}
 
-        $entry = "{id: " . $row['id'] . ", content: '" . $row['name'] . " <sup><a href=\'mailto:" . $row['roll_no'] . "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>" . $row['roll_no'] . "</a></sup>" . "', start: new Date(" . $dDate . "),end: new Date(" . $aDate . "), group: " . $row['room_no'] . ", destination: '" . $row["destination"] . "', roll_no:'" . $row["roll_no"] . "', name: '" . $row["name"] . "', pContact: '" . $row["pnumber"] . "', dContact:'" . $row["dnumber"] . "', status: '" . $row["status"] . "', cause:'" . addslashes(urldecode(str_replace("%3E",">",str_replace("%2F","/",(str_replace("%3C","<",(str_replace("%2C",",",(str_replace("'", "\'", str_replace('"', '\"', $row['cause']))))))))))) . "' , style: '";
+        $entry = "{id: " . $row['id'] . ", content: '" . $row['name'] . " <sup><a href=\'mailto:" . $row['roll_no'] . "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>" . $row['roll_no'] . "</a></sup>" . "', start: new Date(" . $dDate . "),end: new Date(" . $aDate . "), group: " . $row['room_no'] . ", destination: '" . $row["destination"] . "', roll_no:'" . $row["roll_no"] . "', name: '" . $row["name"] . "', pContact: '" . $row["pnumber"] . "', dContact:'" . $row["dnumber"] . "', status: '" . $row["status"] . "', cause:'" . addslashes(urldecode(str_replace("%3E",">",str_replace("%2F","/",(str_replace("%3C","<",(str_replace("%2C",",",(str_replace("'", "\'", str_replace('"', '\"', $row['cause']))))))))))) . "', hostelNo: '" . $row['hostel_no'] . "', floorNo: '" . $row['floor_no'] . "', roomNo:'" . $row['room_no'] . "' , style: '";
           if($row['status']=="Approved") $entry = $entry . "background-color: rgba(100,200,100,0.6); border: rgb(0,255,0);";
           else if($row['status']=="Declined") $entry = $entry . "background-color: rgba(200,100,100,0.5); border: rgb(255,0,0);";
           else $entry = $entry . "background-color: rgba(0,0,0,0.2); border: #000;";
@@ -428,6 +429,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
       end = end.getDate()+"/"+end.getMonth()+"/"+end.getFullYear() +" ("+getDay(end)+")";
 
       document.getElementById("S-name").innerHTML=items._data[id].name;
+      document.getElementById("S-address").innerHTML="Room "+items._data[id].roomNo+", Floor "+items._data[id].floorNo+", Hostel "+items._data[id].hostelNo;
       document.getElementById("S-roll_no").innerHTML="<a href=\'mailto:" + items._data[id].roll_no + "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>"+items._data[id].roll_no+"</a>";
       document.getElementById("S-duration").innerHTML="<span class='level'>Period</span><br />"+start + " to "+end;
       document.getElementById("S-pContact").innerHTML="<span class='level'>Personal Contact</span><br /><a href='tel:"+items._data[id].pContact+"'>"+items._data[id].pContact+"</a>";

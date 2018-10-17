@@ -257,8 +257,11 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
               </span><br />
               <span id="S-address"></span><br />
               <span id="S-pContact"></span><br />
-              <span id="S-dContact"></span><br /><br />
-              <span id="S-duration"></span><br />
+              <span id="S-dContact"></span><br />
+              <div id="S-duration">
+                <span id="S-start"></span><br />
+                <span id="S-end"></span><br />
+              </div>
               <span id="S-cause" style="height:100px;"></span><br /><br />
               <table id="S-decision">
 
@@ -301,7 +304,7 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
         //Date('2018', '10', '13', '23', '25', '0')
         //Date('2011', '04' - 1, '11', '11', '51', '00')
 
-        //{id: 40, content: "Harshal Gajjar", start: Tue Nov 13 2018 23:25:00 GMT+0530 (IST), end: Thu Nov 15 2018 07:30:00 GMT+0530 (IST), group: 6}
+        //{id: 40, content: "Harshal Gajjar", start: Tue Nov 13 2018 23:25:00 GMT+0530 (IST), end: Thu Nov 15 2018 07:30:00 GMT+0530 (IST), group: 6}oca
         //{id: 2, group: 1, start: Sun Oct 14 2018 02:54:37 GMT+0530 (IST), end: Sun Oct 14 2018 06:54:37 GMT+0530 (IST), type: "background", …}
 
         $entry = "{id: " . $row['id'] . ", content: '" . $row['name'] . " <sup><a href=\'mailto:" . $row['roll_no'] . "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>" . $row['roll_no'] . "</a></sup>" . "', start: new Date(" . $dDate . "),end: new Date(" . $aDate . "), group: " . $row['room_no'] . ", destination: '" . $row["destination"] . "', roll_no:'" . $row["roll_no"] . "', name: '" . $row["name"] . "', pContact: '" . $row["pnumber"] . "', dContact:'" . $row["dnumber"] . "', status: '" . $row["status"] . "', cause:'" . addslashes(urldecode(str_replace("%3E",">",str_replace("%2F","/",(str_replace("%3C","<",(str_replace("%2C",",",(str_replace("'", "\'", str_replace('"', '\"', $row['cause']))))))))))) . "', hostelNo: '" . $row['hostel_no'] . "', floorNo: '" . $row['floor_no'] . "', roomNo:'" . $row['room_no'] . "' , style: '";
@@ -413,6 +416,46 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
 
     }
 
+    function formatAMPM(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
+    }
+
+    function getmonthWord(date){
+      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return months[date.getMonth()];
+    }
+
+    function timereference(date){
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var timeref;
+      if(hours>=17 && hours<21){ //5pm to 9pm
+        timeref="evening";
+      }else if(hours>=21 && hours<23){ //9pm to 11pm
+        timeref="night";
+      }else if(hours>=23 && hours<24){ //11pm to 12pm
+        timeref="late night";
+      }else if(hours>=0 && hours<7){ //12am to 7am
+        timeref="early morning";
+      }else if(hours>=7 && hours<9){ //7am to 9am
+        timeref="morning";
+      }else if(hours>=9 && hours<11){ //9am to 11am
+        timeref="forenoon";
+      }else if(hours>=11 && hours<13){ //9am to 1pm
+        timeref="noon";
+      }else if(hours>=13 && hours<17){ //1pm to 5pm
+        timeref="afternoon";
+      }
+      return timeref;
+    }
+
     function viewInfo(id){
       if(items._data[id].status=="Approved"){
         document.getElementById("S-decision").innerHTML="<tr><td><div id='S-Choice-D' onclick='decline()'>Decline</div></td></tr><tr><td><div id='S-Choice-R' onclick='resetDecision()'>Reset</div></td></tr>";
@@ -425,13 +468,14 @@ if (isset($_SESSION['login']) AND $_SESSION['login']=="success"){ //checking for
       var start=new Date(items._data[id].start);
       var end=new Date(items._data[id].end);
 
-      start = start.getDate()+"/"+start.getMonth()+"/"+start.getFullYear() +" ("+getDay(start)+")";
-      end = end.getDate()+"/"+end.getMonth()+"/"+end.getFullYear() +" ("+getDay(end)+")";
+      start = start.getDate()+"/"+getmonthWord(start)+"/"+start.getFullYear()%100+" ("+getDay(start)+")"+" "+timereference(start);
+      end = end.getDate()+"/"+getmonthWord(end)+"/"+end.getFullYear()%100+" ("+getDay(end)+")"+" "+timereference(end);
 
       document.getElementById("S-name").innerHTML=items._data[id].name;
       document.getElementById("S-address").innerHTML="Room "+items._data[id].roomNo+", Floor "+items._data[id].floorNo+", Hostel "+items._data[id].hostelNo;
       document.getElementById("S-roll_no").innerHTML="<a href=\'mailto:" + items._data[id].roll_no + "@iitdh.ac.in?subject=[Court]%20Regarding%20your%20Leave%20Request\'>"+items._data[id].roll_no+"</a>";
-      document.getElementById("S-duration").innerHTML="<span class='level'>Period</span><br />"+start + " to "+end;
+      document.getElementById("S-start").innerHTML="<span class='level'>Departure</span><br />"+start;
+      document.getElementById("S-end").innerHTML="<span class='level'>Arrival</span><br />"+end;
       document.getElementById("S-pContact").innerHTML="<span class='level'>Personal Contact</span><br /><a href='tel:"+items._data[id].pContact+"'>"+items._data[id].pContact+"</a>";
       document.getElementById("S-dContact").innerHTML="<span class='level'>Destination Contact</span><br /><a href='tel:"+items._data[id].dContact+"'>"+items._data[id].dContact+"</a>";
       document.getElementById("S-cause").innerHTML="<span class='level'>Cause</span><br /> "+items._data[id].cause;

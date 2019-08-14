@@ -73,3 +73,7 @@ a:hover{
     text-decoration: none;
     cursor: pointer;
 }
+
+.required{
+  color:rgba(255,0,0,0.5);
+}

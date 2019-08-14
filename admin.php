@@ -50,6 +50,7 @@ $ncomplains_hostel=0;
 
 			<div class="collapse navbar-collapse" id="mainbar">
 				<ul class="nav navbar-nav navbar-right">
+          <li><a href="leave.php">Leave Request<?php if($_SESSION['level']=="warden" || $_SESSION['level']=="secy" || $_SESSION['level']=="gsha") echo "s";?></a></li>
 					<?php if($_SESSION['level']=="gsha"){?><li><a href="team.php">Team</a></li> <?php } ?>
           <?php if($_SESSION['level']=="gsha" || $_SESSION['level']=="warden" || $_SESSION['level']=="secy"){?><li><a href="mail.php">Mail</a></li> <?php } ?>
 					<li><a href="logout.php">Log out</a></li>
@@ -190,10 +191,10 @@ $ncomplains_hostel=0;
             $ntypes=mysqli_num_rows($request_2);
 
           ?>
-          Hostel Secretary<?php if($ntypes>1) echo "s"; ?>:<br />
+          Hostel <?php if($ntypes>1) echo "Secretaries"; else echo "Secretary"; ?>:<br />
             <?php
             while($row = mysqli_fetch_array($request_2)){
-              echo "- <a href='mailto:" . $row['email'] .  "?subject=[Court]%20Hostel%20" . $_SESSION['hostel'] . "'>" . $row['name'] . "</a><br />";
+              echo "- <a href='mailto:" . $row['email'] .  "?subject=[Court]%20Regarding%20Hostel%20" . $_SESSION['hostel'] . "'>" . $row['name'] . "</a><br />";
             }
             if($ntypes==0){
               echo "<i>No Secretary present<br />";
@@ -921,8 +922,6 @@ $ncomplains_hostel=0;
             }
 
             xhr.send("del_submit=submit&complain_id="+complaint_id);
-
-
 
           }
           </script>
